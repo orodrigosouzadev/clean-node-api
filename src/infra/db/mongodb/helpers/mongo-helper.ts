@@ -23,6 +23,7 @@ export const MongoHelper = {
 
   map (collection: any, id: string): any {
     const collectionInserted = { id, ...collection }
+    delete collectionInserted._id
     return collectionInserted
   }
 }
