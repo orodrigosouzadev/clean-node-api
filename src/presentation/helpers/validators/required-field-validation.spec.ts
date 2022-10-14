@@ -7,4 +7,10 @@ describe('RequiredField Validation', () => {
     const error = sut.validate({ otherField: 'any_name' })
     expect(error).toEqual(new MissingParamError('field'))
   })
+
+  test('should not return if validation succeeds', () => {
+    const sut = new RequiredFieldValidation('field')
+    const error = sut.validate({ field: 'any_name' })
+    expect(error).toBeFalsy()
+  })
 })
