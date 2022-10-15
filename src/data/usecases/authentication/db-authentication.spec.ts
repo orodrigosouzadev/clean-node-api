@@ -2,7 +2,7 @@ import { DbAuthentication } from './db-authentication'
 import {
   AccountModel,
   AuthenticationModel,
-  HashCompare, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenRepository
+  HashComparer, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenRepository
 } from './db-authentication-protocols'
 
 const makeFakeAccount = (): AccountModel => ({
@@ -26,13 +26,13 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   return new LoadAccountByEmailRepositoryStub()
 }
 
-const makeHashCompare = (): HashCompare => {
-  class HashCompareStub implements HashCompare {
+const makeHashComparer = (): HashComparer => {
+  class HashComparerStub implements HashComparer {
     async compare (value: string, hash: string): Promise<boolean> {
       return new Promise(resolve => resolve(true))
     }
   }
-  return new HashCompareStub()
+  return new HashComparerStub()
 }
 
 const makeEncrypter = (): Encrypter => {
@@ -56,26 +56,26 @@ const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
 interface SutTypes {
   sut: DbAuthentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
-  hashCompareStub: HashCompare
+  hashComparerStub: HashComparer
   encrypterStub: Encrypter
   updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
-  const hashCompareStub = makeHashCompare()
+  const hashComparerStub = makeHashComparer()
   const encrypterStub = makeEncrypter()
   const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
   const sut = new DbAuthentication(
     loadAccountByEmailRepositoryStub,
-    hashCompareStub,
+    hashComparerStub,
     encrypterStub,
     updateAccessTokenRepositoryStub
   )
   return {
     sut,
     loadAccountByEmailRepositoryStub,
-    hashCompareStub,
+    hashComparerStub,
     encrypterStub,
     updateAccessTokenRepositoryStub
   }
@@ -103,23 +103,23 @@ describe('DbAuthentication UseCase', () => {
     expect(accessToken).toBeNull()
   })
 
-  test('should call HashCompare with correct values', async () => {
-    const { sut, hashCompareStub } = makeSut()
-    const compareSpy = jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(null)
+  test('should call HashComparer with correct values', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    const compareSpy = jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(null)
     await sut.auth(makeFakeAuthentication())
     expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
 
-  test('should throw if HashCompare throws', async () => {
-    const { sut, hashCompareStub } = makeSut()
-    jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+  test('should throw if HashComparer throws', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const promise = sut.auth(makeFakeAuthentication())
     await expect(promise).rejects.toThrow()
   })
 
-  test('should return null if HashComapare returns false', async () => {
-    const { sut, hashCompareStub } = makeSut()
-    jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(new Promise((resolve) => resolve(false)))
+  test('should return null if HashComaparer returns false', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(new Promise((resolve) => resolve(false)))
     const accessToken = await sut.auth(makeFakeAuthentication())
     expect(accessToken).toBeNull()
   })
