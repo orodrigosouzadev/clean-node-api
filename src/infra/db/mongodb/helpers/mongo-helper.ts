@@ -1,4 +1,4 @@
-import { MongoClient, Collection } from 'mongodb'
+import { MongoClient, Collection, ObjectId } from 'mongodb'
 
 export const MongoHelper = {
   client: null as MongoClient,
@@ -25,5 +25,9 @@ export const MongoHelper = {
     const collectionInserted = { id, ...collection }
     delete collectionInserted._id
     return collectionInserted
+  },
+
+  generateObjectId (id: string): ObjectId {
+    return new ObjectId(id)
   }
 }
