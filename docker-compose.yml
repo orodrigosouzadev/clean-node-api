@@ -1,22 +1,38 @@
-version: "3"
+version: '3'
 services:
+  api:
+    container_name: api_container
+    image: node:16
+    working_dir: /usr/src/clean-node-api
+    restart: always
+    command: bash -c "yarn install --only=prod && yarn start"
+    environment:
+      - PORT=5050
+      - MONGO_URL=mongodb://mongo:27017/clean-node-api
+      - JWT_SECRET_KEY=@9b-3|Q!6=_]T41
+    volumes:
+      - ./dist/:/usr/src/clean-node-api/dist/
+      - ./package.json:/usr/src/clean-node-api/package.json
+    ports:
+      - '5050:5050'
+    depends_on:
+      - mongo
+    networks:
+      - clean-node-api
+ 
   mongo:
-    container_name: mongo-container
+    container_name: mongo_container
     image: mongo:4
     restart: always
     volumes:
-      - ./data:/data/db
+      - mongodb:/data/db
     ports:
-      - "27017:27017"
-  api:
-    container_name: api-container
-    build: .
-    image: clean-node-api
-    restart: always
-    command: npm start
-    volumes:
-      - ./dist:/usr/src/clean-node-api/dist
-    ports:
-      - "5050:5050"
-    links:
-      - mongo
+      - '27017:27017'
+    networks:
+      - clean-node-api
+ 
+networks:
+  clean-node-api:
+ 
+volumes:
+  mongodb:
