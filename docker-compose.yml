@@ -5,7 +5,7 @@ services:
     image: node:16
     working_dir: /usr/src/clean-node-api
     restart: always
-    command: bash -c "yarn install --only=prod && yarn start"
+    command: bash -c "yarn install --only=prod && yarn debug"
     environment:
       - PORT=5050
       - MONGO_URL=mongodb://mongo:27017/clean-node-api
@@ -15,6 +15,7 @@ services:
       - ./package.json:/usr/src/clean-node-api/package.json
     ports:
       - '5050:5050'
+      - '9222:9222'
     depends_on:
       - mongo
     networks:
