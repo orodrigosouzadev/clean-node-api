@@ -117,4 +117,11 @@ describe('DbAddAccount Usecase', () => {
     const account = await sut.add(makeFakeAccountData())
     expect(account).toBeNull()
   })
+
+  test('should throw if LoadAccountByEmailRepository throws', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const promise = sut.add(makeFakeAccountData())
+    await expect(promise).rejects.toThrow()
+  })
 })
