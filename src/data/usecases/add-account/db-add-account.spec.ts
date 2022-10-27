@@ -45,14 +45,14 @@ const makeHasher = (): Hasher => {
   return new HasherStub()
 }
 
-interface sutTypes {
+type SutTypes = {
   sut: DbAddAccount
   hasherStub: Hasher
   addAccountRepositoryStub: AddAccountRepository
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
 
-const makeSut = (): sutTypes => {
+const makeSut = (): SutTypes => {
   const hasherStub = makeHasher()
   const addAccountRepositoryStub = makeAddAccountRepositoryStub()
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
