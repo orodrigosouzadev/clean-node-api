@@ -86,5 +86,12 @@ describe('Survey Mongo Repository', () => {
       const survey = await sut.loadById(res.insertedId.toString())
       expect(survey).toBeTruthy()
     })
+
+    test('should throw if load survey by id throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'loadById').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+      const promise = sut.loadById('any_id')
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
