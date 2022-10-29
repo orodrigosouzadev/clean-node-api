@@ -20,7 +20,7 @@ const makeSurvey = async (): Promise<SurveyModel> => {
     date: new Date()
   })
 
-  return MongoHelper.map(res, res.insertedId.toString())
+  return MongoHelper.map(res)
 }
 
 const makeAccount = async (): Promise<AccountModel> => {
@@ -30,7 +30,7 @@ const makeAccount = async (): Promise<AccountModel> => {
     password: 'any_password'
   })
 
-  return MongoHelper.map(res, res.insertedId.toString())
+  return MongoHelper.map(res)
 }
 
 let surveyCollection: Collection
@@ -69,6 +69,27 @@ describe('Survey Mongo Repository', () => {
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.id).toBeTruthy()
       expect(surveyResult.answer).toBe('any_answer')
+    })
+
+    test('should update a survey result if its not new', async () => {
+      const survey = await makeSurvey()
+      const account = await makeAccount()
+      const res = await surveyResultCollection.insertOne({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: 'any_answer',
+        date: new Date()
+      })
+      const sut = makeSut()
+      const surveyResult = await sut.save({
+        surveyId: survey.id,
+        accountId: account.id,
+        answer: 'other_answer',
+        date: new Date()
+      })
+      expect(surveyResult).toBeTruthy()
+      expect(surveyResult.id).toEqual(res.insertedId)
+      expect(surveyResult.answer).toBe('other_answer')
     })
   })
 })

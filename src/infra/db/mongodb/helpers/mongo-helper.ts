@@ -21,8 +21,8 @@ export const MongoHelper = {
     return this.client.db().collection(name)
   },
 
-  map (collection: any, id: string): any {
-    const collectionInserted = { id, ...collection }
+  map (collection: any): any {
+    const collectionInserted = { id: collection._id, ...collection }
     delete collectionInserted._id
     return collectionInserted
   },

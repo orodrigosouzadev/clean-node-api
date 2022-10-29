@@ -10,13 +10,16 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
   async add (accountData: AddAccountModel): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const result = await accountCollection.insertOne(accountData)
-    return MongoHelper.map(accountData, result.insertedId.toString())
+    return result && MongoHelper.map({
+      _id: result.insertedId,
+      ...accountData
+    })
   }
 
   async loadByEmail (email: string): Promise<AccountModel> {
     const accountCollection = await MongoHelper.getCollection('accounts')
     const account = await accountCollection.findOne({ email })
-    return account && MongoHelper.map(account, account._id.toString())
+    return account && MongoHelper.map(account)
   }
 
   async updateAccessToken (id: string, token: string): Promise<void> {
@@ -38,6 +41,6 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
         role: 'admin'
       }]
     })
-    return account && MongoHelper.map(account, account._id.toString())
+    return account && MongoHelper.map(account)
   }
 }
