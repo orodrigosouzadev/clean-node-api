@@ -104,7 +104,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
           surveyId: surveyResult[0].surveyId,
           question: surveyResult[0].question,
           date: surveyResult[0].date,
-          answers: { ...surveyResult[0].answers }
+          answers: [...surveyResult[0].answers]
         }
       : null
   }
