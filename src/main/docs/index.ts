@@ -1,6 +1,6 @@
 import { loginPath } from './paths/login-path'
-import { accountSchema } from './schemas/account-schema'
-import { loginParamsSchema } from './schemas/login-params-schema copy'
+import { badRequest, notFound, serverError, unauthorized } from './components'
+import { accountSchema, errorSchema, loginParamsSchema } from './schemas'
 
 export default {
   openapi: '3.0.0',
@@ -8,6 +8,10 @@ export default {
     title: 'Rodrigo Souza DEV - Clean Node API',
     description: 'API desenvolvida no curso do Mango para realizar enquetes entre programadores',
     version: '1.0.0'
+  },
+  license: {
+    name: 'MIT',
+    url: 'https://opensource.org/licenses/MIT'
   },
   servers: [{
     url: '/api'
@@ -20,6 +24,13 @@ export default {
   },
   schemas: {
     account: accountSchema,
-    loginParams: loginParamsSchema
+    loginParams: loginParamsSchema,
+    error: errorSchema
+  },
+  components: {
+    badRequest,
+    notFound,
+    serverError,
+    unauthorized
   }
 }
