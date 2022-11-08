@@ -12,7 +12,7 @@ O objetivo do treinamento é mostrar como criar uma API com uma arquitetura bem 
 
 <br />
 
-## [**Link para a documentação da API**](// TODO)
+## [**Link para a documentação da API**](https://rsdev-surveys-api.herokuapp.com/api-docs/)
 
 > ## APIs construídas no treinamento
 
