@@ -1,25 +1,30 @@
 import { InvalidParamError } from '@/presentation/errors'
 import { CompareFieldsValidation } from './compare-fields-validation'
+import { faker } from '@faker-js/faker'
+
+const field = faker.random.word()
+const fieldToCompare = faker.random.word()
 
 const makeSut = (): CompareFieldsValidation => {
-  return new CompareFieldsValidation('field', 'fieldToCompare')
+  return new CompareFieldsValidation(field, fieldToCompare)
 }
 
-describe('CompareFields Validation', () => {
-  test('should return a InvalidParamError if validation fails', () => {
+describe('CompareFieldsValidation', () => {
+  test('should return an InvalidParamError if validation fails', () => {
     const sut = makeSut()
     const error = sut.validate({
-      field: 'any_value',
-      fieldToCompare: 'wrong_value'
+      [field]: faker.random.word(),
+      [fieldToCompare]: faker.random.word()
     })
-    expect(error).toEqual(new InvalidParamError('fieldToCompare'))
+    expect(error).toEqual(new InvalidParamError(fieldToCompare))
   })
 
   test('should not return if validation succeeds', () => {
     const sut = makeSut()
+    const value = faker.random.word()
     const error = sut.validate({
-      field: 'any_value',
-      fieldToCompare: 'any_value'
+      [field]: value,
+      [fieldToCompare]: value
     })
     expect(error).toBeFalsy()
   })
