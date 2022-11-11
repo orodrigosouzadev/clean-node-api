@@ -1,4 +1,5 @@
 import { LoadSurveyResultRepository, SaveSurveyResultRepository } from '@/data/protocols/db'
+import { SurveyResultModel } from '@/domain/models'
 import { MongoHelper, QueryBuilder } from '@/infra/db'
 import round from 'mongo-round'
 import { ObjectId } from 'mongodb'
@@ -191,14 +192,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository, 
         answers: '$answers'
       })
       .build()
-    const surveyResult = await surveyResultCollection.aggregate(query).toArray()
-    return surveyResult.length
-      ? {
-          surveyId: surveyResult[0].surveyId,
-          question: surveyResult[0].question,
-          date: surveyResult[0].date,
-          answers: [...surveyResult[0].answers]
-        }
-      : null
+    const surveyResult = await surveyResultCollection.aggregate<SurveyResultModel>(query).toArray()
+    return surveyResult.length ? surveyResult[0] : null
   }
 }
