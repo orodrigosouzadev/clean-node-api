@@ -82,6 +82,35 @@ describe('SurveyMongoRepository', () => {
       expect(survey).toBeTruthy()
     })
 
+    test('should return null if survey does not exists', async () => {
+      const sut = makeSut()
+      const survey = await sut.loadById(new FakeObjectId().toHexString())
+      expect(survey).toBeFalsy()
+    })
+
+    test('should throw if load survey by id throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(sut, 'loadById').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+      const promise = sut.loadById('any_id')
+      await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('loadAnswers()', () => {
+    test('should load answers on success', async () => {
+      const survey = mockAddSurveyParams()
+      const res = await surveyCollection.insertOne(survey)
+      const sut = makeSut()
+      const answers = await sut.loadAnswers(res.insertedId.toString())
+      expect(answers).toEqual([survey.answers[0].answer, survey.answers[1].answer])
+    })
+
+    test('should return empty array if survey does not exists', async () => {
+      const sut = makeSut()
+      const answers = await sut.loadAnswers(new FakeObjectId().toHexString())
+      expect(answers).toEqual([])
+    })
+
     test('should throw if load survey by id throws', async () => {
       const sut = makeSut()
       jest.spyOn(sut, 'loadById').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
