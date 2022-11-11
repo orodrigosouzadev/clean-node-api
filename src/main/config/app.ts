@@ -2,7 +2,7 @@ import setupMiddlewares from '@/main/config/middlewares'
 import setupRoutes from '@/main/config/routes'
 import setupStaticFiles from '@/main/config/static-files'
 import setupSwagger from '@/main/config/swagger'
-import { setupApolloServer } from './apollo-server'
+import { setupApolloServer } from '@/main/graphql/apollo'
 
 import express, { Express } from 'express'
 
