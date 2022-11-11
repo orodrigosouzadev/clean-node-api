@@ -1,5 +1,5 @@
 [![Build Status](https://github.com/orodrigosouzadev/clean-node-api/actions/workflows/production.yml/badge.svg)](https://github.com/orodrigosouzadev/clean-node-api/actions/workflows/production.yml)
-[![Coverage Status](https://coveralls.io/repos/github/orodrigosouzadev/clean-node-api/badge.svg?branch=main)](https://coveralls.io/github/orodrigosouzadev/clean-node-api?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/orodrigosouzadev/clean-node-api/badge.svg)](https://coveralls.io/github/orodrigosouzadev/clean-node-api)
 
 # **Clean Node API**
 
