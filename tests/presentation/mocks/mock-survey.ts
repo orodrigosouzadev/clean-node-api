@@ -1,13 +1,13 @@
 import { SurveyModel } from '@/domain/models'
-import { AddSurvey, LoadSurveyById, LoadSurveys } from '@/domain/usecases'
-import { mockSurveyModel, mockSurveyModels } from '@/tests/domain/mocks'
+import { AddSurvey, CheckSurveyById, LoadAnswersBySurvey, LoadSurveys } from '@/domain/usecases'
+import { mockSurveyModels } from '@/tests/domain/mocks'
+import { faker } from '@faker-js/faker'
 
 export class AddSurveySpy implements AddSurvey {
   addSurveyParams: AddSurvey.Params
 
   async add (data: AddSurvey.Params): Promise<void> {
     this.addSurveyParams = data
-    return Promise.resolve()
   }
 }
 
@@ -17,16 +17,26 @@ export class LoadSurveysSpy implements LoadSurveys {
 
   async load (accountId: string): Promise<SurveyModel[]> {
     this.accountId = accountId
-    return Promise.resolve(this.surveyModels)
+    return this.surveyModels
   }
 }
 
-export class LoadSurveyByIdSpy implements LoadSurveyById {
-  surveyModel = mockSurveyModel()
+export class LoadAnswersBySurveySpy implements LoadAnswersBySurvey {
+  result = [faker.random.word(), faker.random.word()]
   id: string
 
-  async loadById (id: string): Promise<SurveyModel> {
+  async loadAnswers (id: string): Promise<LoadAnswersBySurvey.Result> {
     this.id = id
-    return Promise.resolve(this.surveyModel)
+    return this.result
+  }
+}
+
+export class CheckSurveyByIdSpy implements CheckSurveyById {
+  result = true
+  id: string
+
+  async checkById (id: string): Promise<CheckSurveyById.Result> {
+    this.id = id
+    return this.result
   }
 }
